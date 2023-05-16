@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "AppLayout";
+}
+
+<div class="text-center">
+
+    <!-- Application Header -->
+    <header>
+        <partial name="_Header" />
+    </header>
+
+    <!-- Application Main -->
+    <main>
+        @RenderBody()
+    </main>
+
+    <!-- Application Footer -->
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            Francesco Limpias &copy; @DateTime.Now.Year -> la_mia_pizzeria_static
+        </div>
+    </footer>
+
+</div>

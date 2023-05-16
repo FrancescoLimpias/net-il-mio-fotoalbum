@@ -1,0 +1,84 @@
+﻿@using il_mio_fotoalbum.Models.Utility;
+@model IEnumerable<il_mio_fotoalbum.Models.Utility.DeveloperCommandsGroup>
+
+@{
+    ViewData["Title"] = "Developer Endpoints";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<script type="text/javascript">
+    function openErrorWindow() {
+        window.open(
+            '/Developer/ExceptionPopup',
+            'ErrorDetail',
+            'height=' + 350 + "px"
+            + ',width=' + 700 + "px"
+            + ',left=500,top=10,status=no,toolbar=no,resizable=yes,scrollbars=yes'
+        );
+    }
+</script>
+
+<div class="container">
+    @foreach (DeveloperCommandsGroup group in Model)
+    {
+        <br />
+        <h3>
+            @group.Name
+        </h3>
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Command</th>
+                    <th>Response</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (DeveloperCommandModel command in group.Commands)
+                {
+                    <tr>
+
+                        <!-- Command name -->
+                        <td class="align-middle">@command.Name</td>
+
+                        <!-- Command status (switch idle/success/fail) -->
+                        <td class="align-middle">
+                            @if (command.Response == null)
+                            {
+                                <span>--</span>
+                            }
+                            else if (command.Exception != null)
+                            {
+                                <button class="btn btn-danger btn-sm rounded-pill" onclick="openErrorWindow()">
+                                    ERROR
+                                </button>
+                            }
+                            else if ((bool)command.Response)
+                            {
+                                <i class="fa-solid fa-check" style="color: #198754;"></i>
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-xmark" style="color: #dc3545;"></i>
+                            }
+                        </td>
+
+                        <!-- Command actions -->
+                        <td>
+                            <form asp-controller="Developer" asp-action="Execute" method="POST">
+                                @Html.AntiForgeryToken()
+                                <button name="guid" class="btn btn-outline-warning" type="submit" value="@command.DeveloperCommandModelGuid">Run</button>
+                            </form>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>

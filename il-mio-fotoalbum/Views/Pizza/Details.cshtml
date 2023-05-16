@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Details";
+}
+
+@model Pizza
+
+<div class="text-center">
+
+    <header>
+        <h1 class="display-4">Static Pizzeria</h1>
+        <p>By Francesco Limpias</p>
+    </header>
+
+    <main>
+        <div class="px-3">
+
+            <!-- Pizza title -->
+            <h2>Pizza @Model.Name</h2>
+            <br />
+
+            <!-- Pizza image -->
+            @if (Model.ImagePath != null)
+            {
+                <img src="@Model.ImagePath" class="w-50" />
+            }
+            else
+            {
+                <span>
+                    Nessuna foto disponibile
+                </span>
+            }
+            <br />
+
+            <!-- Pizza details -->
+            <p>
+                <br />
+
+                @Model.Description
+
+                <br />
+
+                Categoria: <b>@Model?.Category?.Name</b>
+
+                <div class="">
+                    <span>
+                        Ingredienti:
+                    </span>
+                    <ul class="list-group">
+                        @foreach (Ingredient ingredient in Model?.Ingredients)
+                        {
+                            <li class="list-group-item">@ingredient.Name @ingredient.Symbol</li>
+                        }
+                    </ul>
+                </div>
+
+                Prezzo: <b>@Model.Price€</b>
+            </p>
+
+            <!-- Go back -->
+            <div class="mb-3">
+                <a class="btn btn-primary" href="@Url.Action("Index", "Pizza")">Indietro</a>
+
+                @if (User.IsInRole("ADMIN"))
+                {
+                    <a class="btn btn-outline-primary" href="@Url.Action("Edit", "Pizza", new {id = Model.PizzaId})">
+                        Modifica <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+
+                    <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@Model.PizzaId" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+                        <button type="submit" class="btn btn-outline-danger">
+                            Elimina <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </main>
+
+</div>
+
+

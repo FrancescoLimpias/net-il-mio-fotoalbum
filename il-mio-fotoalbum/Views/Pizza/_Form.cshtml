@@ -1,0 +1,75 @@
+﻿@*
+    The model ValueTuple holds 2 Types:
+     string - where the action parameter is passed (typically create/edit)
+     PizzaPayload - holding pizza and categories data for form population
+*@
+
+@model ValueTuple<string, PizzaPayload>
+
+<!-- Form -->
+<form asp-action="@Model.Item1" method="post" class="mb-3">
+    @Html.AntiForgeryToken()
+
+    <!-- General Error Report -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Name input -->
+    <div class="form-group mb-2">
+        <label asp-for="Item2.Pizza.Name" class="control-label">Nome</label>
+        <input asp-for="Item2.Pizza.Name" name="Name" class="form-control" />
+        <span asp-validation-for="Item2.Pizza.Name" class="text-danger"></span>
+    </div>
+
+    <!-- Description input -->
+    <div class="form-group mb-2">
+        <label asp-for="Item2.Pizza.Description" class="control-label">Descrizione</label>
+        <input asp-for="Item2.Pizza.Description" name="Description" class="form-control" />
+        <span asp-validation-for="Item2.Pizza.Description" class="text-danger"></span>
+    </div>
+
+    <!-- Price input -->
+    <div class="form-group mb-2">
+        <label asp-for="Item2.Pizza.Price" class="control-label">Prezzo</label>
+        <input type="number" asp-for="Item2.Pizza.Price" name="Price" class="form-control" />
+        <span asp-validation-for="Item2.Pizza.Price" class="text-danger"></span>
+    </div>
+
+    <!-- Category input -->
+    <div class="input-group mb-2">
+        <label asp-for="Item2.Pizza.CategoryId" class="input-group-text">
+            Categoria
+        </label>
+        <select asp-for="Item2.Pizza.CategoryId" name="CategoryId" class="form-select" aria-label="Category select">
+            @foreach (Category category in Model.Item2.Categories)
+            {
+                <option value="@category.CategoryId">
+                    @category.Name
+                </option>
+            }
+        </select>
+        <span asp-validation-for="Item2.Pizza.CategoryId" class="text-danger"></span>
+    </div>
+
+    <!-- Ingredients input -->
+    <div class="input-group mb-2">
+        <label asp-for="Item2.SelectedIngredients" class="input-group-text">
+            Ingredienti
+        </label>
+        <select asp-for="Item2.SelectedIngredients"
+                asp-items="@Model.Item2.Ingredients"
+                name="SelectedIngredients"
+                multiple="multiple"
+                size="10"
+                class="form-select"
+                aria-label="Ingredients select">
+        </select>
+        <span asp-validation-for="Item2.SelectedIngredients" class="text-danger"></span>
+    </div>
+
+    <!-- Navigation -->
+    <div class="form-group">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Pizza")">Indietro</a>
+        <input type="submit" value="Conferma" class="btn btn-primary" />
+    </div>
+
+</form>

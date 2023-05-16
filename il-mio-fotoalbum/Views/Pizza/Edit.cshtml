@@ -1,0 +1,17 @@
+﻿@model PizzaPayload
+@{
+    ViewData["Title"] = "Modifica";
+}
+
+<div class="text-center px-3">
+
+    <!-- Header -->
+    <h1>@ViewData["Title"]</h1>
+    <h4>Pizza</h4>
+    <hr />
+
+    <!-- Partial Form -->
+    <partial name="_Form" model='("Edit", Model)' />
+
+</div>
+

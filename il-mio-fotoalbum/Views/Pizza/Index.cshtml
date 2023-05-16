@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model List<Pizza>
+
+<div class="text-center">
+
+    <header>
+        <h1 class="display-4">Static Pizzeria</h1>
+        <p>By Francesco Limpias</p>
+    </header>
+
+    <main>
+        <div class="px-3">
+            @if (User.IsInRole("ADMIN"))
+            {
+                <a class="btn btn-primary" href="@Url.Action("Create", "Pizza")">
+                    Inserisci una pizza
+                </a>
+            }
+
+
+            @if (Model.Count() == 0)
+            {
+                <h3>404 Pizzas not found :(</h3>
+            }
+            else
+            {
+                <table class="table">
+                    <caption>Le nostre pizze!</caption>
+                    <thead>
+                        <tr>
+                            <th class="text-danger">nome</th>
+                            <th>categoria</th>
+                            <th>descrizione</th>
+                            <th>allergeni</th>
+                            <th>foto</th>
+                            <th>prezzo</th>
+                            <th>azioni</th>
+                        </tr>
+                    </thead>
+                    @foreach (Pizza pizza in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                @pizza.Name
+                            </td>
+                            <td class="align-middle h5">
+                                @Html.Raw(pizza?.Category?.Symbol)
+                            </td>
+                            <td class="align-middle">
+                                @pizza.Description
+                            </td>
+                            <td class="align-middle">
+                                <div class="d-flex flex-wrap">
+                                    @foreach (Ingredient ingredient in pizza.Ingredients.Where(ingredient => ingredient.Allergen))
+                                    {
+                                        <span>
+                                            @ingredient.Symbol
+                                        </span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="align-middle" class="w-25">
+                                @if (pizza.ImagePath != null)
+                                {
+                                    <img src="@pizza.ImagePath" class="w-50" />
+                                }
+                                else
+                                {
+                                    <span>
+                                        Nessuna foto disponibile
+                                    </span>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @pizza.Price€
+                            </td>
+                            <th class="align-middle">
+                                <div class="d-flex flex-column">
+                                    <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Pizza", new {id = pizza.PizzaId})">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+
+                                    @if (User.IsInRole("ADMIN"))
+                                    {
+                                        <a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Pizza", new {id = pizza.PizzaId})">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+
+                                        <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.PizzaId" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </th>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </main>
+
+</div>
+
+

@@ -1,0 +1,54 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+}
+
+<!-- Bootstrap containers -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+
+        <!-- Home link -->
+        <a class="navbar-brand" href="/">Pizzeria</a>
+
+        <!-- Hamburger menu icon -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Bootstrap containers  (for links) -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <!-- Links -->
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Pagina principale</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Accesso
+                    </a>
+                    <ul class="dropdown-menu">
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </li>
+                @if (User.IsInRole("ADMIN"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/developer">Developer</a>
+                    </li>
+                }
+
+            </ul>
+
+
+            <!-- Search form -->
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Lavori in corso" aria-label="Cerca">
+                <button class="btn btn-outline-success" type="submit">Cerca</button>
+            </form>
+
+        </div>
+    </div>
+</nav>
