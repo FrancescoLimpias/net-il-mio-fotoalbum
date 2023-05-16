@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace il_mio_fotoalbum
 {
-    public class PizzeriaContext : IdentityDbContext<IdentityUser>
+    public class PhotoAlbumContext : IdentityDbContext<IdentityUser>
     {
 
         public DbSet<Pizza> Pizzas { get; set; }
@@ -14,7 +14,7 @@ namespace il_mio_fotoalbum
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=pizzeria;Integrated Security=True;Trust Server Certificate=True");
+            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=fotoalbum;Integrated Security=True;Trust Server Certificate=True");
         }
 
     }

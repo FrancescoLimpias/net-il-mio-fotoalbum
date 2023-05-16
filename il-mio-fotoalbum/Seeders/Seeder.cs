@@ -7,7 +7,7 @@ namespace il_mio_fotoalbum.Seeders
     {
 
         //Database connection
-        static protected PizzeriaContext context = new PizzeriaContext();
+        static protected PhotoAlbumContext context = new PhotoAlbumContext();
 
         //List of raw data for elements creation
         static private List<TRawData> RawList { get; set; }
@@ -30,7 +30,7 @@ namespace il_mio_fotoalbum.Seeders
 
         //ABSTRACTS
         //Retrieve the DbSet to store elements into
-        abstract public DbSet<TModel> GetDbSet(PizzeriaContext context);
+        abstract public DbSet<TModel> GetDbSet(PhotoAlbumContext context);
         //Logic to translate raw data into new elements
         abstract public TModel GenerateElementFromRawData(TRawData rawData);
     }

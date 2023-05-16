@@ -10,12 +10,12 @@ namespace il_mio_fotoalbum
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services
-                .AddDbContext<PizzeriaContext>();
+                .AddDbContext<PhotoAlbumContext>();
 
             builder.Services
                 .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<PizzeriaContext>();
+                .AddEntityFrameworkStores<PhotoAlbumContext>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -41,7 +41,7 @@ namespace il_mio_fotoalbum
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Pizza}/{action=Index}/{id?}");
+                pattern: "{controller=Photo}/{action=Index}/{id?}");
 
             app.MapRazorPages();
 

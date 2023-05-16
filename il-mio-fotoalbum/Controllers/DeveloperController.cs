@@ -7,7 +7,7 @@ using System;
 
 namespace il_mio_fotoalbum.Controllers
 {
-    [Authorize(Roles = "ADMIN")]
+    //[Authorize(Roles = "ADMIN")]
     public class DeveloperController : Controller
     {
 

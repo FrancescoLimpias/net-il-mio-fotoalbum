@@ -15,7 +15,7 @@ namespace il_mio_fotoalbum.Seeders
             })
         { }
 
-        public override DbSet<Category> GetDbSet(PizzeriaContext context)
+        public override DbSet<Category> GetDbSet(PhotoAlbumContext context)
         {
             return context.Categories;
         }

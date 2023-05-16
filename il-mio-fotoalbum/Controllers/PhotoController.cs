@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace il_mio_fotoalbum.Controllers;
-public class PizzaController : Controller
+public class PhotoController : Controller
 {
 
-    PizzeriaContext context = new PizzeriaContext();
+    PhotoAlbumContext context = new PhotoAlbumContext();
 
-    // GET: PizzaController
+    // GET: PhotoController
     public ActionResult Index()
     {
         return View(
@@ -24,7 +24,7 @@ public class PizzaController : Controller
             );
     }
 
-    // GET: PizzaController/Details/5
+    // GET: PhotoController/Details/5
     public ActionResult Details(long id)
     {
         return View(
@@ -35,7 +35,7 @@ public class PizzaController : Controller
             .FirstOrDefault());
     }
 
-    // GET: PizzaController/Create
+    // GET: PhotoController/Create
     [Authorize(Roles = "ADMIN")]
     public ActionResult Create()
     {
@@ -47,7 +47,7 @@ public class PizzaController : Controller
         });
     }
 
-    // POST: PizzaController/Create
+    // POST: PhotoController/Create
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -86,7 +86,7 @@ public class PizzaController : Controller
         }
     }
 
-    // GET: PizzaController/Edit/5
+    // GET: PhotoController/Edit/5
     [Authorize(Roles = "ADMIN")]
     public ActionResult Edit(long id)
     {
@@ -107,7 +107,7 @@ public class PizzaController : Controller
         });
     }
 
-    // POST: PizzaController/Edit/5
+    // POST: PhotoController/Edit/5
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -162,7 +162,7 @@ public class PizzaController : Controller
         }
     }
 
-    // GET: PizzaController/Delete/5
+    // GET: PhotoController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "ADMIN")]

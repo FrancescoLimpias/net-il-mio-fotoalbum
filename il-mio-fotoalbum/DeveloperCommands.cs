@@ -10,7 +10,7 @@ namespace il_mio_fotoalbum
     public static class DeveloperCommands
     {
 
-        private static readonly PizzeriaContext context = new();
+        private static readonly PhotoAlbumContext context = new();
 
         // Developer Commands
         public static List<DeveloperCommandsGroup> Groups = new()
