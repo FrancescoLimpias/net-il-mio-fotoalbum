@@ -10,7 +10,7 @@
     <div class="container-fluid">
 
         <!-- Home link -->
-        <a class="navbar-brand" href="/">Pizzeria</a>
+        <a class="navbar-brand" href="/">Photo Album</a>
 
         <!-- Hamburger menu icon -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Accesso
+                        Access
                     </a>
                     <ul class="dropdown-menu">
                         <partial name="_LoginPartial" />
@@ -36,7 +36,7 @@
                 @*@if (User.IsInRole("ADMIN"))
                 {*@
                     <li class="nav-item">
-                        <a class="nav-link" href="/developer">Developer</a>
+                        <a class="nav-link" href="/developer">Developer Area</a>
                     </li>
                 @*}*@
 
@@ -45,8 +45,8 @@
 
             <!-- Search form -->
             <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Lavori in corso" aria-label="Cerca">
-                <button class="btn btn-outline-success" type="submit">Cerca</button>
+                <input class="form-control me-2" type="search" placeholder="Work In Progress" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 
         </div>
