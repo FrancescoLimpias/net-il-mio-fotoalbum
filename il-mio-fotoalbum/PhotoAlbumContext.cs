@@ -8,9 +8,9 @@ namespace il_mio_fotoalbum
     public class PhotoAlbumContext : IdentityDbContext<IdentityUser>
     {
 
-        public DbSet<Pizza> Pizzas { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Album> Albums { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

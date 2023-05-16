@@ -2,7 +2,7 @@
     ViewData["Title"] = "Details";
 }
 
-@model Pizza
+@model Photo
 
 <div class="text-center">
 
@@ -15,13 +15,13 @@
         <div class="px-3">
 
             <!-- Pizza title -->
-            <h2>Pizza @Model.Name</h2>
+            <h2>Pizza @Model.Title</h2>
             <br />
 
             <!-- Pizza image -->
-            @if (Model.ImagePath != null)
+            @if (Model.Location != null)
             {
-                <img src="@Model.ImagePath" class="w-50" />
+                <img src="@Model.Location" class="w-50" />
             }
             else
             {
@@ -39,14 +39,14 @@
 
                 <br />
 
-                Categoria: <b>@Model?.Category?.Name</b>
+                Categoria: <b>@Model?.Album?.Title</b>
 
                 <div class="">
                     <span>
                         Ingredienti:
                     </span>
                     <ul class="list-group">
-                        @foreach (Ingredient ingredient in Model?.Ingredients)
+                        @foreach (Category ingredient in Model?.Categories)
                         {
                             <li class="list-group-item">@ingredient.Name @ingredient.Symbol</li>
                         }
@@ -58,15 +58,15 @@
 
             <!-- Go back -->
             <div class="mb-3">
-                <a class="btn btn-primary" href="@Url.Action("Index", "Pizza")">Indietro</a>
+                <a class="btn btn-primary" href="@Url.Action("Index", "Photo")">Indietro</a>
 
                 @if (User.IsInRole("ADMIN"))
                 {
-                    <a class="btn btn-outline-primary" href="@Url.Action("Edit", "Pizza", new {id = Model.PizzaId})">
+                    <a class="btn btn-outline-primary" href="@Url.Action("Edit", "Photo", new {id = Model.PhotoId})">
                         Modifica <i class="fa-solid fa-pen-to-square"></i>
                     </a>
 
-                    <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@Model.PizzaId" method="post" class="d-inline">
+                    <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@Model.PhotoId" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <span asp-validation-summary="ModelOnly" class="text-danger"></span>
                         <button type="submit" class="btn btn-outline-danger">

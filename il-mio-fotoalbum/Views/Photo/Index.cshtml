@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model List<Pizza>
+@model List<Photo>
 
 <div class="text-center">
 
@@ -15,7 +15,7 @@
         <div class="px-3">
             @if (User.IsInRole("ADMIN"))
             {
-                <a class="btn btn-primary" href="@Url.Action("Create", "Pizza")">
+                <a class="btn btn-primary" href="@Url.Action("Create", "Photo")">
                     Inserisci una pizza
                 </a>
             }
@@ -40,21 +40,21 @@
                             <th>azioni</th>
                         </tr>
                     </thead>
-                    @foreach (Pizza pizza in Model)
+                    @foreach (Photo pizza in Model)
                     {
                         <tr>
                             <td class="align-middle">
-                                @pizza.Name
+                                @pizza.Title
                             </td>
                             <td class="align-middle h5">
-                                @Html.Raw(pizza?.Category?.Symbol)
+                                @Html.Raw(pizza?.Album?.Symbol)
                             </td>
                             <td class="align-middle">
                                 @pizza.Description
                             </td>
                             <td class="align-middle">
                                 <div class="d-flex flex-wrap">
-                                    @foreach (Ingredient ingredient in pizza.Ingredients.Where(ingredient => ingredient.Allergen))
+                                    @foreach (Category ingredient in pizza.Categories.Where(ingredient => ingredient.Prioritary))
                                     {
                                         <span>
                                             @ingredient.Symbol
@@ -63,9 +63,9 @@
                                 </div>
                             </td>
                             <td class="align-middle" class="w-25">
-                                @if (pizza.ImagePath != null)
+                                @if (pizza.Location != null)
                                 {
-                                    <img src="@pizza.ImagePath" class="w-50" />
+                                    <img src="@pizza.Location" class="w-50" />
                                 }
                                 else
                                 {
@@ -79,17 +79,17 @@
                             </td>
                             <th class="align-middle">
                                 <div class="d-flex flex-column">
-                                    <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Pizza", new {id = pizza.PizzaId})">
+                                    <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Photo", new {id = pizza.PhotoId})">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
 
                                     @if (User.IsInRole("ADMIN"))
                                     {
-                                        <a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Pizza", new {id = pizza.PizzaId})">
+                                        <a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Photo", new {id = pizza.PhotoId})">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
 
-                                        <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.PizzaId" method="post">
+                                        <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.PhotoId" method="post">
                                             @Html.AntiForgeryToken()
                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                             <button type="submit" class="btn btn-outline-danger">

@@ -8,15 +8,35 @@ namespace il_mio_fotoalbum.Models
         [Key]
         public long CategoryId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A category name is required")]
         public string Name { get; set; }
 
-        [Required]
-        public string Symbol { get; set; }
+        public string? Symbol { get; set; }
 
-        public List<Pizza> Pizzas { get; set; }
+        public string? Color { get; set; }
 
-        public Category() { }
+        [Required(ErrorMessage = "Set this category as prioritary or not")]
+        public bool Prioritary { get; set; } = false;
 
+        public List<Photo> Photos { get; set; }
+
+        public Category()
+        { }
+
+        public Category(string name, bool prioritary)
+        {
+            Name = name;
+            Prioritary = prioritary;
+            Photos = new List<Photo>();
+        }
+
+        public Category(string name, string symbol, string color, bool prioritary)
+        {
+            Name = name;
+            Symbol = symbol;
+            Color = color;
+            Prioritary = prioritary;
+            Photos = new List<Photo>();
+        }
     }
 }

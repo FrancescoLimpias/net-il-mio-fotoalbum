@@ -17,9 +17,9 @@ public class PhotoController : Controller
     public ActionResult Index()
     {
         return View(
-            context.Pizzas
-            .Include(pizza => pizza.Category)
-            .Include(pizza => pizza.Ingredients)
+            context.Photos
+            .Include(pizza => pizza.Album)
+            .Include(pizza => pizza.Categories)
             .ToList()
             );
     }
@@ -28,10 +28,10 @@ public class PhotoController : Controller
     public ActionResult Details(long id)
     {
         return View(
-            context.Pizzas
-            .Where(pizza => pizza.PizzaId == id)
-            .Include(pizza => pizza.Category)
-            .Include(pizza => pizza.Ingredients)
+            context.Photos
+            .Where(pizza => pizza.PhotoId == id)
+            .Include(pizza => pizza.Album)
+            .Include(pizza => pizza.Categories)
             .FirstOrDefault());
     }
 
@@ -39,11 +39,11 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     public ActionResult Create()
     {
-        return View(new PizzaPayload()
+        return View(new PhotoPayload()
         {
-            Pizza = new(),
-            Categories = context.Categories.ToList(),
-            Ingredients = RetrieveIngredientsSelectList(),
+            Photo = new(),
+            Albums = context.Albums.ToList(),
+            Categories = RetrieveIngredientsSelectList(),
         });
     }
 
@@ -51,16 +51,16 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(Pizza data, [FromForm] List<string> SelectedIngredients)
+    public ActionResult Create(Photo data, [FromForm] List<string> SelectedIngredients)
     {
 
         if (!ModelState.IsValid)
         {
-            return View("Create", new PizzaPayload()
+            return View("Create", new PhotoPayload()
             {
-                Pizza = data,
-                Categories = context.Categories.ToList(),
-                Ingredients = RetrieveIngredientsSelectList(),
+                Photo = data,
+                Albums = context.Albums.ToList(),
+                Categories = RetrieveIngredientsSelectList(),
             });
         }
 
@@ -70,12 +70,12 @@ public class PhotoController : Controller
             foreach (var selectedIngredientStringId in SelectedIngredients)
             {
                 int selectedIngredientId = int.Parse(selectedIngredientStringId);
-                Ingredient selectedIngredient = context.Ingredients.Where(ingredient => ingredient.IngredientId == selectedIngredientId).First();
-                data.Ingredients.Add(selectedIngredient);
+                Category selectedIngredient = context.Categories.Where(ingredient => ingredient.CategoryId == selectedIngredientId).First();
+                data.Categories.Add(selectedIngredient);
             }
 
             // attempt to save the pizza
-            context.Pizzas.Add(data);
+            context.Photos.Add(data);
             context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
@@ -90,20 +90,20 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     public ActionResult Edit(long id)
     {
-        Pizza? searchedPizza =
-            context.Pizzas
-            .Include(pizza => pizza.Ingredients)
-            .Where(pizza => pizza.PizzaId == id)
+        Photo? searchedPizza =
+            context.Photos
+            .Include(pizza => pizza.Categories)
+            .Where(pizza => pizza.PhotoId == id)
             .FirstOrDefault();
 
         if (searchedPizza == null)
             return NotFound();
 
-        return View(new PizzaPayload()
+        return View(new PhotoPayload()
         {
-            Pizza = searchedPizza,
-            Categories = context.Categories.ToList(),
-            Ingredients = RetrieveIngredientsSelectList(searchedPizza),
+            Photo = searchedPizza,
+            Albums = context.Albums.ToList(),
+            Categories = RetrieveIngredientsSelectList(searchedPizza),
         });
     }
 
@@ -111,12 +111,12 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(long id, Pizza data, [FromForm] List<string> SelectedIngredients)
+    public ActionResult Edit(long id, Photo data, [FromForm] List<string> SelectedIngredients)
     {
-        Pizza? searchedPizza =
-        context.Pizzas
-        .Include(pizza => pizza.Ingredients)
-        .Where(pizza => pizza.PizzaId == id)
+        Photo? searchedPizza =
+        context.Photos
+        .Include(pizza => pizza.Categories)
+        .Where(pizza => pizza.PhotoId == id)
         .FirstOrDefault();
 
         if (searchedPizza == null)
@@ -125,11 +125,11 @@ public class PhotoController : Controller
         if (!ModelState.IsValid)
         {
 
-            return View("Edit", new PizzaPayload()
+            return View("Edit", new PhotoPayload()
             {
-                Pizza = data,
-                Categories = context.Categories.ToList(),
-                Ingredients = RetrieveIngredientsSelectList(searchedPizza),
+                Photo = data,
+                Albums = context.Albums.ToList(),
+                Categories = RetrieveIngredientsSelectList(searchedPizza),
             });
         }
 
@@ -137,18 +137,18 @@ public class PhotoController : Controller
         {
 
             // update pizza's fields
-            searchedPizza.Name = data.Name;
+            searchedPizza.Title = data.Title;
             searchedPizza.Description = data.Description;
             searchedPizza.Price = data.Price;
-            searchedPizza.CategoryId = data.CategoryId;
+            searchedPizza.AlbumId = data.AlbumId;
 
             // sync ingredients
-            searchedPizza.Ingredients.Clear();
+            searchedPizza.Categories.Clear();
             foreach (var selectedIngredientStringId in SelectedIngredients)
             {
                 int selectedIngredientId = int.Parse(selectedIngredientStringId);
-                Ingredient selectedIngredient = context.Ingredients.Where(ingredient => ingredient.IngredientId == selectedIngredientId).First();
-                searchedPizza.Ingredients.Add(selectedIngredient);
+                Category selectedIngredient = context.Categories.Where(ingredient => ingredient.CategoryId == selectedIngredientId).First();
+                searchedPizza.Categories.Add(selectedIngredient);
             }
 
             // save
@@ -168,33 +168,33 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     public ActionResult Delete(long id)
     {
-        Pizza? pizzaToDelete = context.Pizzas.Find(id);
+        Photo? pizzaToDelete = context.Photos.Find(id);
 
         // nullity check
         if (pizzaToDelete == null)
             return NotFound();
 
-        context.Pizzas.Remove(pizzaToDelete);
+        context.Photos.Remove(pizzaToDelete);
         context.SaveChanges();
 
         return RedirectToAction(nameof(Index));
     }
 
-    // Retrieve Ingredients Select list
-    private List<SelectListItem> RetrieveIngredientsSelectList(Pizza? pizzaToEdit = null)
+    // Retrieve Albums Select list
+    private List<SelectListItem> RetrieveIngredientsSelectList(Photo? pizzaToEdit = null)
     {
         List<SelectListItem> selectListItems = new();
 
-        var ingredients = context.Ingredients;
+        var ingredients = context.Categories;
         foreach (var ingredient in ingredients)
         {
             selectListItems.Add(new()
             {
                 Text = $"{ingredient.Name} {ingredient.Symbol}",
-                Value = ingredient.IngredientId.ToString(),
+                Value = ingredient.CategoryId.ToString(),
                 Selected = pizzaToEdit != null
-                           && pizzaToEdit.Ingredients
-                            .Any(pizzaIngredient => ingredient.IngredientId == pizzaIngredient.IngredientId),
+                           && pizzaToEdit.Categories
+                            .Any(pizzaIngredient => ingredient.CategoryId == pizzaIngredient.CategoryId),
             });
         }
 

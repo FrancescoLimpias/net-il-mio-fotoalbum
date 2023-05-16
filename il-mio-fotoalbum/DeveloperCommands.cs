@@ -25,17 +25,17 @@ namespace il_mio_fotoalbum
                     () =>
                     {
                         return
-                            context.Categories.Count() > 0
-                            && context.Ingredients.Count() > 0
-                            && context.Pizzas.Count() > 0;
+                            context.Albums.Count() > 0
+                            && context.Categories.Count() > 0
+                            && context.Photos.Count() > 0;
                     }),
 
             }),
 
             // Seeders sections
+            GetCommandGroupForModel<Album, AlbumSeeder>(context.Albums),
             GetCommandGroupForModel<Category, CategorySeeder>(context.Categories),
-            GetCommandGroupForModel<Ingredient, IngredientSeeder>(context.Ingredients),
-            GetCommandGroupForModel<Pizza, PizzaSeeder>(context.Pizzas),
+            GetCommandGroupForModel<Photo, PhotoSeeder>(context.Photos),
         };
 
         private static DeveloperCommandsGroup GetCommandGroupForModel<TModel, TSeeder>(DbSet<TModel> dbSet, string? groupName = null) where TModel : class where TSeeder : ISeeder, new()
