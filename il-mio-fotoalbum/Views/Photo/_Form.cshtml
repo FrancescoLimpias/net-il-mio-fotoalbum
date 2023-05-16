@@ -15,61 +15,68 @@
 
     <!-- Name input -->
     <div class="form-group mb-2">
-        <label asp-for="Item2.Photo.Title" class="control-label">Nome</label>
-        <input asp-for="Item2.Photo.Title" name="Name" class="form-control" />
+        <label asp-for="Item2.Photo.Title" class="control-label">Title</label>
+        <input asp-for="Item2.Photo.Title" name="Title" class="form-control" />
         <span asp-validation-for="Item2.Photo.Title" class="text-danger"></span>
     </div>
 
     <!-- Description input -->
     <div class="form-group mb-2">
-        <label asp-for="Item2.Photo.Description" class="control-label">Descrizione</label>
+        <label asp-for="Item2.Photo.Description" class="control-label">Description</label>
         <input asp-for="Item2.Photo.Description" name="Description" class="form-control" />
         <span asp-validation-for="Item2.Photo.Description" class="text-danger"></span>
     </div>
 
-    <!-- Price input -->
+    <!-- Location input -->
     <div class="form-group mb-2">
-        <label asp-for="Item2.Photo.Price" class="control-label">Prezzo</label>
-        <input type="number" asp-for="Item2.Photo.Price" name="Price" class="form-control" />
-        <span asp-validation-for="Item2.Photo.Price" class="text-danger"></span>
+        <label asp-for="Item2.Photo.Location" class="control-label">Location (URL)</label>
+        <input type="number" asp-for="Item2.Photo.Location" name="Location" class="form-control" />
+        <span asp-validation-for="Item2.Photo.Location" class="text-danger"></span>
     </div>
 
-    <!-- Category input -->
+    <!-- Private input -->
+    <div class="form-group mb-2">
+        <label asp-for="Item2.Photo.Private" class="control-label">Private</label>
+        <input asp-for="Item2.Photo.Private" name="Private" class="form-control" />
+        <span asp-validation-for="Item2.Photo.Private" class="text-danger"></span>
+    </div>
+
+    <!-- Album input -->
     <div class="input-group mb-2">
         <label asp-for="Item2.Photo.AlbumId" class="input-group-text">
-            Categoria
+            Album
         </label>
-        <select asp-for="Item2.Photo.AlbumId" name="CategoryId" class="form-select" aria-label="Category select">
-            @foreach (Album category in Model.Item2.Albums)
+        <select asp-for="Item2.Photo.AlbumId" name="AlbumId" class="form-select" aria-label="Album select">
+            @foreach (Album album in Model.Item2.Albums)
             {
-                <option value="@category.AlbumId">
-                    @category.Title
-                </option>
+                    <option value="@album.AlbumId">
+                    @album.Title
+                    </option>
             }
         </select>
         <span asp-validation-for="Item2.Photo.AlbumId" class="text-danger"></span>
     </div>
 
-    <!-- Ingredients input -->
+    <!-- Categories input -->
     <div class="input-group mb-2">
         <label asp-for="Item2.SelectedCategories" class="input-group-text">
-            Ingredienti
+            Categories
         </label>
         <select asp-for="Item2.SelectedCategories"
                 asp-items="@Model.Item2.Categories"
-                name="SelectedIngredients"
+                name="SelectedCategories"
                 multiple="multiple"
                 size="10"
                 class="form-select"
-                aria-label="Ingredients select">
+                aria-label="Categories select">
         </select>
         <span asp-validation-for="Item2.SelectedCategories" class="text-danger"></span>
     </div>
 
     <!-- Navigation -->
     <div class="form-group">
-        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Photo")">Indietro</a>
-        <input type="submit" value="Conferma" class="btn btn-primary" />
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Photo")">Back</a>
+        <input type="submit" value="Confirm" class="btn btn-primary" />
     </div>
 
 </form>

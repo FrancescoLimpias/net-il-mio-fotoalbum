@@ -139,7 +139,6 @@ public class PhotoController : Controller
             // update pizza's fields
             searchedPizza.Title = data.Title;
             searchedPizza.Description = data.Description;
-            searchedPizza.Price = data.Price;
             searchedPizza.AlbumId = data.AlbumId;
 
             // sync ingredients

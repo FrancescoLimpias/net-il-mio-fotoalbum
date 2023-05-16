@@ -68,10 +68,11 @@ namespace il_mio_fotoalbum.Seeders
             Photo newPhoto = new(
                 rawData.Item1,
                 rawData.Item2,
-                "https://picsum.photos/536/354",
-                (random.Next(0, 1) == 0 ? true : false),
+                "",
+                (random.Next(0, 2) == 0 ? true : false),
                 null
                 );
+            newPhoto.Location = $"https://picsum.photos/seed/{newPhoto.GetHashCode()}/200/300";
 
             // Attach album if available
             var albums = context.Albums.ToList();

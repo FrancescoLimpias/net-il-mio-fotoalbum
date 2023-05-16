@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Photos Index";
 }
 
 @model List<Photo>
@@ -7,7 +7,7 @@
 <div class="text-center">
 
     <header>
-        <h1 class="display-4">Static Pizzeria</h1>
+        <h1 class="display-4">Photos</h1>
         <p>By Francesco Limpias</p>
     </header>
 
@@ -16,80 +16,76 @@
             @if (User.IsInRole("ADMIN"))
             {
                 <a class="btn btn-primary" href="@Url.Action("Create", "Photo")">
-                    Inserisci una pizza
+                    Insert a photo
                 </a>
             }
 
 
             @if (Model.Count() == 0)
             {
-                <h3>404 Pizzas not found :(</h3>
+                <h3>404 Photos not found :(</h3>
             }
             else
             {
                 <table class="table">
-                    <caption>Le nostre pizze!</caption>
+                    <caption>Your photos!</caption>
                     <thead>
                         <tr>
-                            <th class="text-danger">nome</th>
-                            <th>categoria</th>
-                            <th>descrizione</th>
-                            <th>allergeni</th>
-                            <th>foto</th>
-                            <th>prezzo</th>
-                            <th>azioni</th>
+                            <th class="text-danger">title</th>
+                            <th>album</th>
+                            <th>description</th>
+                            <th>special tags</th>
+                            <th>image</th>
+                            <th>visibility</th>
+                            <th>actions</th>
                         </tr>
                     </thead>
-                    @foreach (Photo pizza in Model)
+                    @foreach (Photo photo in Model)
                     {
                         <tr>
                             <td class="align-middle">
-                                @pizza.Title
+                                @photo.Title
                             </td>
                             <td class="align-middle h5">
-                                @Html.Raw(pizza?.Album?.Symbol)
+                                @photo?.Album?.Title
                             </td>
                             <td class="align-middle">
-                                @pizza.Description
+                                @photo?.Description
                             </td>
                             <td class="align-middle">
                                 <div class="d-flex flex-wrap">
-                                    @foreach (Category ingredient in pizza.Categories.Where(ingredient => ingredient.Prioritary))
+                                    @foreach (Category category in photo.Categories.Where(category => category.Prioritary))
                                     {
-                                        <span>
-                                            @ingredient.Symbol
-                                        </span>
+                                        <i class="fa-solid fa-@category.Symbol" style="color:@category.Color"></i>
                                     }
                                 </div>
                             </td>
-                            <td class="align-middle" class="w-25">
-                                @if (pizza.Location != null)
+                            <td class="align-middle w-25">
+                                <img src="@photo.Location" class="w-50" />
+                            </td>
+                            <td class="align-middle">
+                                @if (photo.Private)
                                 {
-                                    <img src="@pizza.Location" class="w-50" />
+                                    <i class="fa-solid fa-eye-slash"></i>
                                 }
                                 else
                                 {
-                                    <span>
-                                        Nessuna foto disponibile
-                                    </span>
+                                    <i class="fa-solid fa-eye"></i>
                                 }
-                            </td>
-                            <td class="align-middle">
-                                @pizza.Price€
                             </td>
                             <th class="align-middle">
                                 <div class="d-flex flex-column">
-                                    <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Photo", new {id = pizza.PhotoId})">
+                                    <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Photo", new {id = photo.PhotoId})">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
 
                                     @if (User.IsInRole("ADMIN"))
                                     {
-                                        <a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Photo", new {id = pizza.PhotoId})">
+                                        <a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Photo", new {id = photo.PhotoId})">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
 
-                                        <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.PhotoId" method="post">
+                                        <form asp-controller="Photo" asp-action="Delete" asp-route-id="@photo.PhotoId" method="post">
                                             @Html.AntiForgeryToken()
                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                             <button type="submit" class="btn btn-outline-danger">
