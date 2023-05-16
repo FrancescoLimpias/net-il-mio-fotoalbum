@@ -11,15 +11,15 @@ namespace il_mio_fotoalbum.Controllers;
 public class PhotoController : Controller
 {
 
-    PhotoAlbumContext context = new PhotoAlbumContext();
+    readonly PhotoAlbumContext context = new();
 
     // GET: PhotoController
     public ActionResult Index()
     {
         return View(
             context.Photos
-            .Include(pizza => pizza.Album)
-            .Include(pizza => pizza.Categories)
+            .Include(photo => photo.Album)
+            .Include(photo => photo.Categories)
             .ToList()
             );
     }
@@ -29,9 +29,9 @@ public class PhotoController : Controller
     {
         return View(
             context.Photos
-            .Where(pizza => pizza.PhotoId == id)
-            .Include(pizza => pizza.Album)
-            .Include(pizza => pizza.Categories)
+            .Where(photo => photo.PhotoId == id)
+            .Include(photo => photo.Album)
+            .Include(photo => photo.Categories)
             .FirstOrDefault());
     }
 
@@ -43,7 +43,7 @@ public class PhotoController : Controller
         {
             Photo = new(),
             Albums = context.Albums.ToList(),
-            Categories = RetrieveIngredientsSelectList(),
+            Categories = RetrieveCategoriesListItems(),
         });
     }
 
@@ -51,31 +51,31 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(Photo data, [FromForm] List<string> SelectedIngredients)
+    public ActionResult Create(Photo newPhoto, [FromForm] List<string> SelectedCategories)
     {
 
         if (!ModelState.IsValid)
         {
             return View("Create", new PhotoPayload()
             {
-                Photo = data,
+                Photo = newPhoto,
                 Albums = context.Albums.ToList(),
-                Categories = RetrieveIngredientsSelectList(),
+                Categories = RetrieveCategoriesListItems(),
             });
         }
 
         try
         {
-            // attach ingredients
-            foreach (var selectedIngredientStringId in SelectedIngredients)
+            // attach categories
+            foreach (var selectedCategoryStringId in SelectedCategories)
             {
-                int selectedIngredientId = int.Parse(selectedIngredientStringId);
-                Category selectedIngredient = context.Categories.Where(ingredient => ingredient.CategoryId == selectedIngredientId).First();
-                data.Categories.Add(selectedIngredient);
+                int selectedCategoryId = int.Parse(selectedCategoryStringId);
+                Category selectedCategory = context.Categories.Where(category => category.CategoryId == selectedCategoryId).First();
+                newPhoto.Categories.Add(selectedCategory);
             }
 
             // attempt to save the pizza
-            context.Photos.Add(data);
+            context.Photos.Add(newPhoto);
             context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
@@ -90,20 +90,20 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     public ActionResult Edit(long id)
     {
-        Photo? searchedPizza =
+        Photo? searchedPhoto =
             context.Photos
-            .Include(pizza => pizza.Categories)
-            .Where(pizza => pizza.PhotoId == id)
+            .Include(photo => photo.Categories)
+            .Where(photo => photo.PhotoId == id)
             .FirstOrDefault();
 
-        if (searchedPizza == null)
+        if (searchedPhoto == null)
             return NotFound();
 
         return View(new PhotoPayload()
         {
-            Photo = searchedPizza,
+            Photo = searchedPhoto,
             Albums = context.Albums.ToList(),
-            Categories = RetrieveIngredientsSelectList(searchedPizza),
+            Categories = RetrieveCategoriesListItems(searchedPhoto),
         });
     }
 
@@ -111,43 +111,42 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(long id, Photo data, [FromForm] List<string> SelectedIngredients)
+    public ActionResult Edit(long id, Photo formGeneratedPhoto, [FromForm] List<string> SelectedCategories)
     {
-        Photo? searchedPizza =
+        Photo? photoToEdit =
         context.Photos
-        .Include(pizza => pizza.Categories)
-        .Where(pizza => pizza.PhotoId == id)
+        .Include(photo => photo.Categories)
+        .Where(photo => photo.PhotoId == id)
         .FirstOrDefault();
 
-        if (searchedPizza == null)
+        if (photoToEdit == null)
             return NotFound();
 
         if (!ModelState.IsValid)
-        {
-
             return View("Edit", new PhotoPayload()
             {
-                Photo = data,
+                Photo = formGeneratedPhoto,
                 Albums = context.Albums.ToList(),
-                Categories = RetrieveIngredientsSelectList(searchedPizza),
+                Categories = RetrieveCategoriesListItems(photoToEdit),
             });
-        }
 
         try
         {
 
             // update pizza's fields
-            searchedPizza.Title = data.Title;
-            searchedPizza.Description = data.Description;
-            searchedPizza.AlbumId = data.AlbumId;
+            photoToEdit.Title = formGeneratedPhoto.Title;
+            photoToEdit.Description = formGeneratedPhoto.Description;
+            photoToEdit.Location = formGeneratedPhoto.Location;
+            photoToEdit.Private = formGeneratedPhoto.Private;
+            photoToEdit.AlbumId = formGeneratedPhoto.AlbumId;
 
-            // sync ingredients
-            searchedPizza.Categories.Clear();
-            foreach (var selectedIngredientStringId in SelectedIngredients)
+            // sync categories
+            photoToEdit.Categories.Clear();
+            foreach (var selectedCategoryStringId in SelectedCategories)
             {
-                int selectedIngredientId = int.Parse(selectedIngredientStringId);
-                Category selectedIngredient = context.Categories.Where(ingredient => ingredient.CategoryId == selectedIngredientId).First();
-                searchedPizza.Categories.Add(selectedIngredient);
+                int selectedCategoryId = int.Parse(selectedCategoryStringId);
+                Category selectedCategory = context.Categories.Where(category => category.CategoryId == selectedCategoryId).First();
+                photoToEdit.Categories.Add(selectedCategory);
             }
 
             // save
@@ -167,33 +166,33 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     public ActionResult Delete(long id)
     {
-        Photo? pizzaToDelete = context.Photos.Find(id);
+        Photo? photoToDelete = context.Photos.Find(id);
 
         // nullity check
-        if (pizzaToDelete == null)
+        if (photoToDelete == null)
             return NotFound();
 
-        context.Photos.Remove(pizzaToDelete);
+        context.Photos.Remove(photoToDelete);
         context.SaveChanges();
 
         return RedirectToAction(nameof(Index));
     }
 
     // Retrieve Albums Select list
-    private List<SelectListItem> RetrieveIngredientsSelectList(Photo? pizzaToEdit = null)
+    private List<SelectListItem> RetrieveCategoriesListItems(Photo? photoToEdit = null)
     {
         List<SelectListItem> selectListItems = new();
 
-        var ingredients = context.Categories;
-        foreach (var ingredient in ingredients)
+        var categories = context.Categories;
+        foreach (var category in categories)
         {
             selectListItems.Add(new()
             {
-                Text = $"{ingredient.Name} {ingredient.Symbol}",
-                Value = ingredient.CategoryId.ToString(),
-                Selected = pizzaToEdit != null
-                           && pizzaToEdit.Categories
-                            .Any(pizzaIngredient => ingredient.CategoryId == pizzaIngredient.CategoryId),
+                Text = $"{category.Name} {category.Symbol}",
+                Value = category.CategoryId.ToString(),
+                Selected = photoToEdit != null
+                           && photoToEdit.Categories
+                            .Any(photoCategory => category.CategoryId == photoCategory.CategoryId),
             });
         }
 

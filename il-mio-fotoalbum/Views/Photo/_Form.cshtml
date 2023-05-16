@@ -30,14 +30,14 @@
     <!-- Location input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Location" class="control-label">Location (URL)</label>
-        <input type="number" asp-for="Item2.Photo.Location" name="Location" class="form-control" />
+        <input asp-for="Item2.Photo.Location" name="Location" class="form-control" />
         <span asp-validation-for="Item2.Photo.Location" class="text-danger"></span>
     </div>
 
     <!-- Private input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Private" class="control-label">Private</label>
-        <input asp-for="Item2.Photo.Private" name="Private" class="form-control" />
+        <input type="checkbox" asp-for="Item2.Photo.Private" name="Private" class="form-check-input" />
         <span asp-validation-for="Item2.Photo.Private" class="text-danger"></span>
     </div>
 
