@@ -1,0 +1,72 @@
+﻿@using il_mio_fotoalbum.Models.Utility;
+@{
+    ViewData["Title"] = "Categories Manager";
+}
+
+@model CategoryPayload
+
+<div class="text-center">
+
+    <header>
+        <h1 class="display-4">Categories Manager</h1>
+        <p>By Francesco Limpias</p>
+    </header>
+
+    <main>
+        <div class="px-3">
+
+            @if (Model.Categories.Count() == 0)
+            {
+                <partial name="_SeedDatabase" />
+            }
+            else
+            {
+                <table class="table">
+                    <caption>Your categories!</caption>
+
+                    <thead>
+                        <tr>
+                            <th class="text-danger">Name</th>
+                            <th>Fontawesome Icon</th>
+                            <th>Color</th>
+                            <th>Prioritary</th>
+                            <th>Submit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <partial name="_Form" model='("Create", Model.NewCategory)' />
+                        </tr>
+
+                        @foreach (Category category in Model.Categories)
+                        {
+                            <tr>
+                                <partial name="_Form" model='("Edit", category)' />
+
+                                <td class="align-middle">
+                                    <div class="d-flex flex-column">
+                                        @*<a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Photo", new {id = category.PhotoId})"></a>*@
+
+                                        <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.CategoryId" method="post">
+                                            @Html.AntiForgeryToken()
+
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </main>
+
+</div>
+
+

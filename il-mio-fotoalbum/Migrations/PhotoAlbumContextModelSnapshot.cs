@@ -255,7 +255,7 @@ namespace il_mio_fotoalbum.Migrations
                     b.ToTable("Albums");
                 });
 
-            modelBuilder.Entity("il_mio_fotoalbum.Models.Category", b =>
+            modelBuilder.Entity("il_mio_fotoalbum.Models.NewCategory", b =>
                 {
                     b.Property<long>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -320,7 +320,7 @@ namespace il_mio_fotoalbum.Migrations
 
             modelBuilder.Entity("CategoryPhoto", b =>
                 {
-                    b.HasOne("il_mio_fotoalbum.Models.Category", null)
+                    b.HasOne("il_mio_fotoalbum.Models.NewCategory", null)
                         .WithMany()
                         .HasForeignKey("CategoriesCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

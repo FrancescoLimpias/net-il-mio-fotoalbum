@@ -1,0 +1,52 @@
+﻿@*
+    The model ValueTuple holds 2 Types:
+     string - where the action parameter is passed (typically create/edit)
+     PizzaPayload - holding pizza and categories data for form population
+*@
+
+@model ValueTuple<string, Category>
+
+<!-- Form -->
+<form asp-controller="Category" asp-action="@Model.Item1" asp-route-id="@Model.Item2.CategoryId" method="post" class="mb-3">
+    @Html.AntiForgeryToken()
+
+    <!-- General Error Report -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Name input -->
+    <td class="align-middle">
+        <input asp-for="Item2.Name" class="form-control" />
+        <span asp-validation-for="Item2.Name" class="text-danger"></span>
+    </td>
+
+    <!-- Symbol input -->
+    <td class="align-middle">
+        <div class="d-flex align-items-center gap-2">
+            <input asp-for="Item2.Symbol" class="form-control d-inline" />
+            <span asp-validation-for="Item2.Symbol" class="text-danger"></span>
+            <span>
+                <i class="fa-solid fa-@Model.Item2.Symbol" style="color:@Model.Item2.Color"></i>
+            </span>
+        </div>
+    </td>
+
+    <!-- Color input -->
+    <td class="align-middle">
+        <input asp-for="Item2.Color" type="color" class="form-control" />
+        <span asp-validation-for="Item2.Color" class="text-danger"></span>
+    </td>
+
+    <!-- Priority input -->
+    <td class="align-middle">
+        <input type="checkbox" asp-for="Item2.Prioritary" class="form-check-input"/>
+        <span asp-validation-for="Item2.Prioritary" class="text-danger"></span>
+    </td>
+
+    <!-- Navigation -->
+    <td class="align-middle">
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+    </td>
+
+</form>

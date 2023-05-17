@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace il_mio_fotoalbum.Controllers;
+
+[Authorize(Roles = "CREATOR")]
 public class PhotoController : Controller
 {
 
@@ -39,7 +41,6 @@ public class PhotoController : Controller
     }
 
     // GET: PhotoController/Create
-    [Authorize(Roles = "ADMIN")]
     public ActionResult Create()
     {
         return View(new PhotoPayload()
@@ -51,7 +52,6 @@ public class PhotoController : Controller
     }
 
     // POST: PhotoController/Create
-    [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Create([Bind(Prefix = "Item2.Photo")] Photo newPhoto, [FromForm] List<string> SelectedCategories)
@@ -90,7 +90,6 @@ public class PhotoController : Controller
     }
 
     // GET: PhotoController/Edit/5
-    [Authorize(Roles = "ADMIN")]
     public ActionResult Edit(long id)
     {
         Photo? searchedPhoto =
@@ -111,7 +110,6 @@ public class PhotoController : Controller
     }
 
     // POST: PhotoController/Edit/5
-    [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Edit(long id, Photo formGeneratedPhoto, [FromForm] List<string> SelectedCategories)
@@ -166,7 +164,6 @@ public class PhotoController : Controller
     // GET: PhotoController/Delete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "ADMIN")]
     public ActionResult Delete(long id)
     {
         Photo? photoToDelete = context.Photos.Find(id);
