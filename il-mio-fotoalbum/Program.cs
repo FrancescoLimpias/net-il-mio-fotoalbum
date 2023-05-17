@@ -67,20 +67,6 @@ namespace il_mio_fotoalbum
                 var adminRole = new IdentityRole();
                 adminRole.Name = "ADMIN";
                 await RoleManager.CreateAsync(adminRole);
-
-                // generate my account      
-                var user = new IdentityUser();
-
-                user.UserName = "francescolimpias@gmail.com";
-                user.Email = "francescolimpias@gmail.com";
-                user.EmailConfirmed = true;
-                string userPass = "code9CODE*";
-
-                IdentityResult checkUser = await UserManager.CreateAsync(user, userPass);
-
-                //Add default User to Role Admin    
-                if (checkUser.Succeeded)
-                    await UserManager.AddToRoleAsync(user, "ADMIN");
             }
 
             // creating Creating Manager adminRole     
@@ -90,6 +76,28 @@ namespace il_mio_fotoalbum
                 var creatorRole = new IdentityRole();
                 creatorRole.Name = "CREATOR";
                 await RoleManager.CreateAsync(creatorRole);
+            }
+
+            string TestUserName = "test@gmail.com";
+            IdentityUser TestUser = await UserManager.FindByNameAsync(TestUserName);
+            if (TestUser == null)
+            {
+                // generate my account      
+                TestUser = new IdentityUser();
+
+                TestUser.UserName = TestUserName;
+                TestUser.Email = TestUserName;
+                TestUser.EmailConfirmed = true;
+                string TestUserPass = "test9TEST*";
+
+                IdentityResult checkUser = await UserManager.CreateAsync(TestUser, TestUserPass);
+
+                //Add default User to Role Admin    
+                if (checkUser.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(TestUser, "ADMIN");
+                    await UserManager.AddToRoleAsync(TestUser, "CREATOR");
+                }
             }
         }
     }

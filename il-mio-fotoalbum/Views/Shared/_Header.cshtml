@@ -23,29 +23,41 @@
 
                 <!-- Links -->
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/Photo">Your photos</a>
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Access
+                        Private Area
                     </a>
                     <ul class="dropdown-menu">
                         <partial name="_LoginPartial" />
+                        @if (User.IsInRole("CREATOR"))
+                        {
+                            <hr />
+                            <li class="dropdown-item">
+                                <a class="nav-link active" aria-current="page" href="/Photo">Photos</a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 @*@if (User.IsInRole("ADMIN"))
                 {*@
-                    <li class="nav-item">
-                        <a class="nav-link" href="/developer">Developer Area</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/developer">Developer Area</a>
+                </li>
                 @*}*@
 
             </ul>
 
 
             <!-- Search form -->
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Work In Progress" aria-label="Search">
+            <form asp-controller="@(User.IsInRole("CREATOR") ? "Photo" : "Home")"
+                  asp-action="Index"
+                  class="d-flex"
+                  role="search"
+                  method="GET">
+
+                <input name="searchedWord" class="form-control me-2" type="search" placeholder="Type your search..." aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 

@@ -14,10 +14,13 @@ public class PhotoController : Controller
     readonly PhotoAlbumContext context = new();
 
     // GET: PhotoController
-    public ActionResult Index()
+    public ActionResult Index(string? searchedWord)
     {
         return View(
             context.Photos
+            .Where(photo =>
+                searchedWord == null
+                || photo.Title.ToLower().StartsWith(searchedWord.ToLower()))
             .Include(photo => photo.Album)
             .Include(photo => photo.Categories)
             .ToList()
