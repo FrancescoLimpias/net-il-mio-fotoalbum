@@ -16,28 +16,28 @@
     <!-- Name input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Title" class="control-label">Title</label>
-        <input asp-for="Item2.Photo.Title" name="Title" class="form-control" />
+        <input asp-for="Item2.Photo.Title" class="form-control" />
         <span asp-validation-for="Item2.Photo.Title" class="text-danger"></span>
     </div>
 
     <!-- Description input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Description" class="control-label">Description</label>
-        <input asp-for="Item2.Photo.Description" name="Description" class="form-control" />
+        <input asp-for="Item2.Photo.Description" class="form-control" />
         <span asp-validation-for="Item2.Photo.Description" class="text-danger"></span>
     </div>
 
     <!-- Location input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Location" class="control-label">Location (URL)</label>
-        <input asp-for="Item2.Photo.Location" name="Location" class="form-control" />
+        <input asp-for="Item2.Photo.Location" class="form-control" />
         <span asp-validation-for="Item2.Photo.Location" class="text-danger"></span>
     </div>
 
     <!-- Private input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Private" class="control-label">Private</label>
-        <input type="checkbox" asp-for="Item2.Photo.Private" name="Private" class="form-check-input" />
+        <input type="checkbox" asp-for="Item2.Photo.Private" class="form-check-input" checked/>
         <span asp-validation-for="Item2.Photo.Private" class="text-danger"></span>
     </div>
 
@@ -46,7 +46,7 @@
         <label asp-for="Item2.Photo.AlbumId" class="input-group-text">
             Album
         </label>
-        <select asp-for="Item2.Photo.AlbumId" name="AlbumId" class="form-select" aria-label="Album select">
+        <select asp-for="Item2.Photo.AlbumId" class="form-select" aria-label="Album select">
             @foreach (Album album in Model.Item2.Albums)
             {
                     <option value="@album.AlbumId">

@@ -51,7 +51,7 @@ public class PhotoController : Controller
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(Photo newPhoto, [FromForm] List<string> SelectedCategories)
+    public ActionResult Create([Bind(Prefix = "Item2.Photo")] Photo newPhoto, [FromForm] List<string> SelectedCategories)
     {
 
         if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ public class PhotoController : Controller
             {
                 Photo = newPhoto,
                 Albums = context.Albums.ToList(),
-                Categories = RetrieveCategoriesListItems(),
+                Categories = RetrieveCategoriesListItems(SelectedCategories),
             });
         }
 
@@ -127,7 +127,7 @@ public class PhotoController : Controller
             {
                 Photo = formGeneratedPhoto,
                 Albums = context.Albums.ToList(),
-                Categories = RetrieveCategoriesListItems(photoToEdit),
+                Categories = RetrieveCategoriesListItems(SelectedCategories),
             });
 
         try
@@ -179,7 +179,7 @@ public class PhotoController : Controller
     }
 
     // Retrieve Albums Select list
-    private List<SelectListItem> RetrieveCategoriesListItems(Photo? photoToEdit = null)
+    private List<SelectListItem> _RetrieveCategoriesListItems(Func<long, bool>? filter = null)
     {
         List<SelectListItem> selectListItems = new();
 
@@ -190,12 +190,30 @@ public class PhotoController : Controller
             {
                 Text = $"{category.Name} {category.Symbol}",
                 Value = category.CategoryId.ToString(),
-                Selected = photoToEdit != null
-                           && photoToEdit.Categories
-                            .Any(photoCategory => category.CategoryId == photoCategory.CategoryId),
+                Selected = filter != null
+                           && filter(category.CategoryId),
             });
         }
 
         return selectListItems;
+    }
+
+    private List<SelectListItem> RetrieveCategoriesListItems(Photo? photoToEdit = null)
+    {
+        if (photoToEdit == null)
+            return _RetrieveCategoriesListItems();
+
+        return _RetrieveCategoriesListItems((comparedId) =>
+        {
+            return photoToEdit.Categories.Any(photoCategory => photoCategory.CategoryId == comparedId);
+        });
+    }
+
+    private List<SelectListItem> RetrieveCategoriesListItems(List<string> selectedCategories)
+    {
+        return _RetrieveCategoriesListItems((comparedId) =>
+        {
+            return selectedCategories.Any(photoCategory => Convert.ToInt64(photoCategory) == comparedId);
+        });
     }
 }
