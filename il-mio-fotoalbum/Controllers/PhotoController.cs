@@ -149,8 +149,13 @@ public class PhotoController : Controller
             //Hash the file content
             string newHashedImageFileName = image.GetContentHash() + Path.GetExtension(image.FileName);
 
-            //Save the image file (with updated name)
-            image.WriteToUploads(newHashedImageFileName);
+            if (photoToEdit.Location != newHashedImageFileName)
+            {
+                DeleteIfNotReferencedByOthers(photoToEdit.Location);
+
+                //Save the image file (with updated name)
+                image.WriteToUploads(newHashedImageFileName);
+            }
 
             // update pizza's fields
             photoToEdit.Title = formGeneratedPhoto.Title;
@@ -189,6 +194,8 @@ public class PhotoController : Controller
         // nullity check
         if (photoToDelete == null)
             return NotFound();
+
+        DeleteIfNotReferencedByOthers(photoToDelete.Location);
 
         context.Photos.Remove(photoToDelete);
         context.SaveChanges();
@@ -233,6 +240,19 @@ public class PhotoController : Controller
         {
             return selectedCategories.Any(photoCategory => Convert.ToInt64(photoCategory) == comparedId);
         });
+    }
+
+    //Photos
+    private void DeleteIfNotReferencedByOthers(string FileName)
+    {
+        if (context.Photos.Where(photo => photo.Location == FileName).Count() == 1)
+        {
+            try
+            {
+                System.IO.File.Delete(Path.Combine("wwwroot/uploads/", FileName));
+            }
+            catch { }
+        }
     }
 
 }

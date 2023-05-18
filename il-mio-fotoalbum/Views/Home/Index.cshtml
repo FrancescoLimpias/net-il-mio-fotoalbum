@@ -54,7 +54,7 @@
                                 </div>
                             </td>
                             <td class="align-middle w-25">
-                                <img :src="photo.location" class="w-100" />
+                                <img :src="['/uploads/' + photo.location]" class="w-100" />
                             </td>
                             @*<th class="align-middle">
                             <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Photo", new {id = photo.PhotoId})">
