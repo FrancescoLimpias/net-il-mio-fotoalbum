@@ -1,4 +1,5 @@
-﻿using il_mio_fotoalbum.Models;
+﻿using ExtensionMethods;
+using il_mio_fotoalbum.Models;
 using il_mio_fotoalbum.Seeders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Security.Cryptography;
 
 namespace il_mio_fotoalbum.Controllers;
 
@@ -41,6 +43,7 @@ public class PhotoController : Controller
     }
 
     // GET: PhotoController/Create
+    [HttpGet]
     public ActionResult Create()
     {
         return View(new PhotoPayload()
@@ -54,10 +57,10 @@ public class PhotoController : Controller
     // POST: PhotoController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Prefix = "Item2.Photo")] Photo newPhoto, [FromForm] List<string> SelectedCategories)
+    public ActionResult Create([Bind(Prefix = "Item2.Photo")] Photo newPhoto, [FromForm] List<string> SelectedCategories, IFormFile image)
     {
 
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || image.Length == 0)
         {
             return View("Create", new PhotoPayload()
             {
@@ -69,6 +72,14 @@ public class PhotoController : Controller
 
         try
         {
+
+            //Hash the file content
+            string newHashedImageFileName = image.GetContentHash() + Path.GetExtension(image.FileName);
+            newPhoto.Location = newHashedImageFileName;
+
+            //Save the image file (with updated name)
+            image.WriteToUploads(newHashedImageFileName);
+
             // attach categories
             foreach (var selectedCategoryStringId in SelectedCategories)
             {
@@ -90,6 +101,7 @@ public class PhotoController : Controller
     }
 
     // GET: PhotoController/Edit/5
+    [HttpGet]
     public ActionResult Edit(long id)
     {
         Photo? searchedPhoto =
@@ -112,7 +124,7 @@ public class PhotoController : Controller
     // POST: PhotoController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(long id, [Bind(Prefix = "Item2.Photo")] Photo formGeneratedPhoto, [FromForm] List<string> SelectedCategories)
+    public ActionResult Edit(long id, [Bind(Prefix = "Item2.Photo")] Photo formGeneratedPhoto, [FromForm] List<string> SelectedCategories, IFormFile image)
     {
         Photo? photoToEdit =
         context.Photos
@@ -123,7 +135,7 @@ public class PhotoController : Controller
         if (photoToEdit == null)
             return NotFound();
 
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || image.Length == 0)
             return View("Edit", new PhotoPayload()
             {
                 Photo = formGeneratedPhoto,
@@ -134,10 +146,16 @@ public class PhotoController : Controller
         try
         {
 
+            //Hash the file content
+            string newHashedImageFileName = image.GetContentHash() + Path.GetExtension(image.FileName);
+
+            //Save the image file (with updated name)
+            image.WriteToUploads(newHashedImageFileName);
+
             // update pizza's fields
             photoToEdit.Title = formGeneratedPhoto.Title;
             photoToEdit.Description = formGeneratedPhoto.Description;
-            photoToEdit.Location = formGeneratedPhoto.Location;
+            photoToEdit.Location = newHashedImageFileName;
             photoToEdit.Private = formGeneratedPhoto.Private;
             photoToEdit.AlbumId = formGeneratedPhoto.AlbumId;
 
@@ -216,4 +234,5 @@ public class PhotoController : Controller
             return selectedCategories.Any(photoCategory => Convert.ToInt64(photoCategory) == comparedId);
         });
     }
+
 }

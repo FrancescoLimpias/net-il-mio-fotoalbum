@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace il_mio_fotoalbum.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationVersion4 : Migration
+    public partial class MigrationsV05 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -102,7 +102,7 @@ namespace il_mio_fotoalbum.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Private = table.Column<bool>(type: "bit", nullable: false),
                     AlbumId = table.Column<long>(type: "bigint", nullable: true)
                 },

@@ -319,7 +319,6 @@ namespace il_mio_fotoalbum.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Private")

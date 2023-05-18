@@ -5,9 +5,12 @@
 *@
 
 @model ValueTuple<string, PhotoPayload>
+@{
+    IFormFile image;
+}
 
 <!-- Form -->
-<form asp-action="@Model.Item1" method="post" class="mb-3">
+<form asp-action="@Model.Item1" enctype="multipart/form-data" method="post" class="mb-3">
     @Html.AntiForgeryToken()
 
     <!-- General Error Report -->
@@ -27,17 +30,17 @@
         <span asp-validation-for="Item2.Photo.Description" class="text-danger"></span>
     </div>
 
-    <!-- Location input -->
+    <!-- Image input -->
     <div class="form-group mb-2">
-        <label asp-for="Item2.Photo.Location" class="control-label">Location (URL)</label>
-        <input asp-for="Item2.Photo.Location" class="form-control" />
-        <span asp-validation-for="Item2.Photo.Location" class="text-danger"></span>
+        <label for="input-image" class="control-label">Image</label>
+        <input id="input-image" type="file" name="image" class="form-control" />
+        @*<span asp-validation-for="Item2.Photo.Location" class="text-danger"></span>*@
     </div>
 
     <!-- Private input -->
     <div class="form-group mb-2">
         <label asp-for="Item2.Photo.Private" class="control-label">Private</label>
-        <input type="checkbox" asp-for="Item2.Photo.Private" class="form-check-input"/>
+        <input type="checkbox" asp-for="Item2.Photo.Private" class="form-check-input" />
         <span asp-validation-for="Item2.Photo.Private" class="text-danger"></span>
     </div>
 
@@ -49,9 +52,9 @@
         <select asp-for="Item2.Photo.AlbumId" class="form-select" aria-label="Album select">
             @foreach (Album album in Model.Item2.Albums)
             {
-                    <option value="@album.AlbumId">
+                <option value="@album.AlbumId">
                     @album.Title
-                    </option>
+                </option>
             }
         </select>
         <span asp-validation-for="Item2.Photo.AlbumId" class="text-danger"></span>

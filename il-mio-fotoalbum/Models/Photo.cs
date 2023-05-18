@@ -1,6 +1,7 @@
 ﻿using il_mio_fotoalbum.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace il_mio_fotoalbum.Models
 {
@@ -19,8 +20,7 @@ namespace il_mio_fotoalbum.Models
         [StringLength(100)]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "An image URL is required")]
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
         public bool Private { get; set; }
 

@@ -12,8 +12,8 @@ using il_mio_fotoalbum;
 namespace il_mio_fotoalbum.Migrations
 {
     [DbContext(typeof(PhotoAlbumContext))]
-    [Migration("20230518090914_MigrationVersion4")]
-    partial class MigrationVersion4
+    [Migration("20230518133209_MigrationsV05")]
+    partial class MigrationsV05
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -322,7 +322,6 @@ namespace il_mio_fotoalbum.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Private")
