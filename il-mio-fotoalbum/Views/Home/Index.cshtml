@@ -67,6 +67,42 @@
             </div>
         </div>
     </main>
+
+    <div v-if="isChatOpened" class="chat-popup card" id="myForm">
+        <div class="card-body">
+            <h5 class="card-title">Chat</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Write to the photographers!</h6>
+
+            <form class="card-text" :onsubmit="sendMessage">
+                <div class="form-group mb-2">
+                    <input type="email" class="form-control" placeholder="Your email" name="messageEmail" required v-model="messageEmail"></input>
+                </div>
+
+                <div class="form-group mb-2">
+                    <textarea class="form-control" placeholder="Type message.." name="messageContent" required v-model="messageContent"></textarea>
+                </div>
+
+                <div v-if="messageSendingStatus" class="alert alert-success py-2" role="alert">
+                    Message Sent!
+                </div>
+
+                <div v-if="messageSendingStatus == false" class="alert alert-danger py-2" role="alert">
+                    Fields are not valid!
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-outline-dark" @@click="closeChat">Close</button>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <button v-else class="open-button btn btn-info" @@click="openChat">
+        <i class="fa-regular fa-message"></i>
+    </button>
+
 </div>
 
 <script>
@@ -75,15 +111,22 @@
     createApp({
         data() {
             return {
+                APIURL: "https://localhost:7208/api/Guest/",
+
                 photos: null,
                 searchedWord: "@Model",
+
+                isChatOpened: false,
+                messageSendingStatus: null,
+                messageEmail: "",
+                messageContent: "",
             }
         },
         methods: {
             fetchPhotos() {
                 let searchedWord = this.searchedWord;
                 axios
-                    .get("https://localhost:7208/api/Api/index", {
+                    .get(this.APIURL + "GetPhotos", {
                         params: { searchedWord }
                     })
                     .then(response => {
@@ -94,6 +137,31 @@
                         this.photos = null;
                     });
             },
+            openChat() {
+                this.isChatOpened = true;
+            },
+            closeChat() {
+                this.isChatOpened = false;
+            },
+            sendMessage() {
+                axios
+                    .post(this.APIURL + "PostMessage", {
+                        Email: this.messageEmail,
+                        Content: this.messageContent,
+                    })
+                    .then(response => {
+                        this.messageContent = "";
+                        this.messageSendingStatus = true;
+                    }).catch(error => {
+                        console.error("Message not sent!");
+                        this.messageSendingStatus = false;
+                    }).finally(() => {
+                        setTimeout(() => {
+                            this.messageSendingStatus = null;
+                        }, 2500);
+                    });
+                return false;
+            }
         },
         mounted() {
             this.fetchPhotos();

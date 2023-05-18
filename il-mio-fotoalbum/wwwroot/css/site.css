@@ -1,18 +1,33 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+/* Button used to open the chat form - fixed at the bottom of the page */
+.open-button {
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+}
+
+/* The popup chat - hidden by default */
+.chat-popup {
+    position: fixed !important;
+    bottom: 23px;
+    right: 28px;
+    z-index: 9;
 }

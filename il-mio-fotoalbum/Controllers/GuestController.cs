@@ -13,18 +13,18 @@ namespace il_mio_fotoalbum.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ApiController : ControllerBase
+    public class GuestController : ControllerBase
     {
         private readonly PhotoAlbumContext context;
 
-        public ApiController(PhotoAlbumContext context)
+        public GuestController(PhotoAlbumContext context)
         {
             this.context = context;
         }
 
         // GET: api/APIPhoto
         [HttpGet]
-        public ActionResult Index(string? searchedWord)
+        public ActionResult GetPhotos(string? searchedWord)
         {
 
             return Ok(
@@ -40,17 +40,14 @@ namespace il_mio_fotoalbum.Controllers
 
         // POST: api/APIPhoto
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPost]
-        public async Task<ActionResult<Photo>> PostPhoto(Photo photo)
+        [HttpPost]
+        public ActionResult PostMessage(Message message)
         {
-            if (context.Photos == null)
-            {
-                return Problem("Entity set 'PhotoAlbumContext.Photos'  is null.");
-            }
-            context.Photos.Add(photo);
-            await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPhoto", new { id = photo.PhotoId }, photo);
-        }*/
+            context.Messages.Add(message);
+            context.SaveChanges();
+
+            return Ok();
+        }
     }
 }

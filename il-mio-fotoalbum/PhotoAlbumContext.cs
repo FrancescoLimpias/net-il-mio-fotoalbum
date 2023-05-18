@@ -12,6 +12,8 @@ namespace il_mio_fotoalbum
         public DbSet<Album> Albums { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<Message> Messages { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=fotoalbum;Integrated Security=True;Trust Server Certificate=True");

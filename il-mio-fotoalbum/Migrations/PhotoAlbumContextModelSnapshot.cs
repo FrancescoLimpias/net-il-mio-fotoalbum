@@ -255,7 +255,7 @@ namespace il_mio_fotoalbum.Migrations
                     b.ToTable("Albums");
                 });
 
-            modelBuilder.Entity("il_mio_fotoalbum.Models.NewCategory", b =>
+            modelBuilder.Entity("il_mio_fotoalbum.Models.Category", b =>
                 {
                     b.Property<long>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -279,6 +279,28 @@ namespace il_mio_fotoalbum.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("il_mio_fotoalbum.Models.Message", b =>
+                {
+                    b.Property<long>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("MessageId"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("il_mio_fotoalbum.Models.Photo", b =>
@@ -320,7 +342,7 @@ namespace il_mio_fotoalbum.Migrations
 
             modelBuilder.Entity("CategoryPhoto", b =>
                 {
-                    b.HasOne("il_mio_fotoalbum.Models.NewCategory", null)
+                    b.HasOne("il_mio_fotoalbum.Models.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoriesCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
