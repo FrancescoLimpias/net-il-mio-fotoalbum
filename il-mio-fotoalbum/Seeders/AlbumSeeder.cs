@@ -20,7 +20,7 @@ namespace il_mio_fotoalbum.Seeders
             return context.Albums;
         }
 
-        public override Album GenerateElementFromRawData(ValueTuple<string, bool> rawData)
+        public override async Task<Album> GenerateElementFromRawData(ValueTuple<string, bool> rawData)
         {
             return new()
             {

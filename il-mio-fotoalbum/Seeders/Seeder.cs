@@ -18,11 +18,11 @@ namespace il_mio_fotoalbum.Seeders
         }
 
         //Public method for running the database seeding
-        public void Seed()
+        public async void Seed()
         {
             foreach (TRawData rawData in RawList)
             {
-                TModel newItem = GenerateElementFromRawData(rawData);
+                TModel newItem = await GenerateElementFromRawData(rawData);
                 GetDbSet(context).Add(newItem);
             }
             context.SaveChanges();
@@ -32,7 +32,7 @@ namespace il_mio_fotoalbum.Seeders
         //Retrieve the DbSet to store elements into
         abstract public DbSet<TModel> GetDbSet(PhotoAlbumContext context);
         //Logic to translate raw data into new elements
-        abstract public TModel GenerateElementFromRawData(TRawData rawData);
+        abstract public Task<TModel> GenerateElementFromRawData(TRawData rawData);
     }
 
     //Utility implementation for translationsless seeders
@@ -41,7 +41,7 @@ namespace il_mio_fotoalbum.Seeders
         protected Seeder(List<TRawData> rawList) : base(rawList)
         { }
 
-        public override TRawData GenerateElementFromRawData(TRawData data)
+        public override async Task<TRawData> GenerateElementFromRawData(TRawData data)
         {
             return data;
         }

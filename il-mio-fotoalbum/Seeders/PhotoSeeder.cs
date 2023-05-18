@@ -1,4 +1,5 @@
 ﻿using il_mio_fotoalbum.Models;
+using il_mio_fotoalbum.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace il_mio_fotoalbum.Seeders
@@ -62,7 +63,7 @@ namespace il_mio_fotoalbum.Seeders
         { }
 
         readonly Random random = new Random();
-        public override Photo GenerateElementFromRawData(ValueTuple<string, string> rawData)
+        public override async Task<Photo> GenerateElementFromRawData(ValueTuple<string, string> rawData)
         {
 
             Photo newPhoto = new(
@@ -72,7 +73,9 @@ namespace il_mio_fotoalbum.Seeders
                 (random.Next(0, 2) == 0 ? true : false),
                 null
                 );
-            newPhoto.Location = $"https://picsum.photos/seed/{newPhoto.GetHashCode()}/200/300";
+            newPhoto.Location = await UploadsManager.Download($"https://picsum.photos/seed/{newPhoto.GetHashCode()}/200/300");
+            //newPhoto.Location = await UploadsManager.Download("https://fastly.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI");
+
 
             // Attach album if available
             var albums = context.Albums.ToList();

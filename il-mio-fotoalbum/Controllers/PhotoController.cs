@@ -1,6 +1,7 @@
 ﻿using ExtensionMethods;
 using il_mio_fotoalbum.Models;
 using il_mio_fotoalbum.Seeders;
+using il_mio_fotoalbum.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,12 +74,9 @@ public class PhotoController : Controller
         try
         {
 
-            //Hash the file content
-            string newHashedImageFileName = image.GetContentHash() + Path.GetExtension(image.FileName);
-            newPhoto.Location = newHashedImageFileName;
+            string imageFileName = UploadsManager.Write(image);
 
-            //Save the image file (with updated name)
-            image.WriteToUploads(newHashedImageFileName);
+            newPhoto.Location = imageFileName;
 
             // attach categories
             foreach (var selectedCategoryStringId in SelectedCategories)
@@ -146,21 +144,17 @@ public class PhotoController : Controller
         try
         {
 
-            //Hash the file content
-            string newHashedImageFileName = image.GetContentHash() + Path.GetExtension(image.FileName);
+            string imageFileName = UploadsManager.Write(image);
 
-            if (photoToEdit.Location != newHashedImageFileName)
+            if (photoToEdit.Location != imageFileName)
             {
-                DeleteIfNotReferencedByOthers(photoToEdit.Location);
-
-                //Save the image file (with updated name)
-                image.WriteToUploads(newHashedImageFileName);
+                UploadsManager.AttemptDelete(photoToEdit.Location);
             }
 
             // update pizza's fields
             photoToEdit.Title = formGeneratedPhoto.Title;
             photoToEdit.Description = formGeneratedPhoto.Description;
-            photoToEdit.Location = newHashedImageFileName;
+            photoToEdit.Location = imageFileName;
             photoToEdit.Private = formGeneratedPhoto.Private;
             photoToEdit.AlbumId = formGeneratedPhoto.AlbumId;
 
@@ -195,7 +189,7 @@ public class PhotoController : Controller
         if (photoToDelete == null)
             return NotFound();
 
-        DeleteIfNotReferencedByOthers(photoToDelete.Location);
+        UploadsManager.AttemptDelete(photoToDelete.Location);
 
         context.Photos.Remove(photoToDelete);
         context.SaveChanges();
@@ -240,19 +234,6 @@ public class PhotoController : Controller
         {
             return selectedCategories.Any(photoCategory => Convert.ToInt64(photoCategory) == comparedId);
         });
-    }
-
-    //Photos
-    private void DeleteIfNotReferencedByOthers(string FileName)
-    {
-        if (context.Photos.Where(photo => photo.Location == FileName).Count() == 1)
-        {
-            try
-            {
-                System.IO.File.Delete(Path.Combine("wwwroot/uploads/", FileName));
-            }
-            catch { }
-        }
     }
 
 }

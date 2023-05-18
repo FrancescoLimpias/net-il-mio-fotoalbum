@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using il_mio_fotoalbum.Utilities;
+using System.Security.Cryptography;
 
 namespace ExtensionMethods
 {
@@ -21,14 +22,9 @@ namespace ExtensionMethods
             }
         }
 
-        public static void WriteToUploads(this IFormFile formFile, string fileName)
+        public static void WriteToUploads(this IFormFile formFile)
         {
-            //Save the image file (with updated name)
-            var filePath = Path.Combine("wwwroot/uploads/", fileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                formFile.CopyTo(stream);
-            }
+            UploadsManager.Write(formFile);
         }
     }
 }

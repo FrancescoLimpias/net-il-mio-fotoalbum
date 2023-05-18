@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,7 +68,6 @@
     <None Include="wwwroot\lib\jquery\dist\jquery.js" />
     <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
     <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
-    <None Include="wwwroot\uploads\273e6839ccf60cb2c2427ae249504e59422b4afa8cfe66de259ac6a354da9ae4.pdf" />
   </ItemGroup>
 
 </Project>
