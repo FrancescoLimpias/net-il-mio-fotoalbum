@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 
 namespace il_mio_fotoalbum.Controllers;
 
-[Authorize(Roles = "CREATOR")]
+[Authorize(Roles = "CREATOR,ADMIN")]
 public class PhotoController : Controller
 {
 
