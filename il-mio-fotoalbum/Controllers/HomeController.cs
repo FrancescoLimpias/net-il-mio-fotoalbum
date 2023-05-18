@@ -14,15 +14,7 @@ namespace il_mio_fotoalbum.Controllers
         // GET: HomeController
         public ActionResult Index(string? searchedWord)
         {
-            return View(
-                context.Photos
-                .Where(photo =>
-                    searchedWord == null
-                    || photo.Title.ToLower().StartsWith(searchedWord.ToLower()))
-                .Include(photo => photo.Album)
-                .Include(photo => photo.Categories)
-                .ToList()
-                );
+            return View("Index", searchedWord);
         }
 
         // GET: HomeController/Details/5

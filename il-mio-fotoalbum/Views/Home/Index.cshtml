@@ -2,24 +2,28 @@
     ViewData["Title"] = "Home";
 }
 
-@model List<Photo>
+@model string
 
-<div class="text-center">
+<div id="app" class="text-center">
 
     <header>
         <h1 class="display-4">Photos</h1>
-        <p>By Francesco Limpias</p>
+        <p v-if="searchedWord == ''">By Francesco Limpias</p>
+        <p v-else>You searched for '{{searchedWord}}'</p>
     </header>
 
     <main>
         <div class="px-3">
 
-            @if (Model.Count() == 0)
-            {
+            <div v-if="photos == null" class="text-center">
+                Loading photos...
+            </div>
+
+            <div v-else-if="photos.length == 0">
                 <partial name="_SeedDatabase" />
-            }
-            else
-            {
+            </div>
+
+            <div v-else>
                 <table class="table">
                     <caption>Your photos!</caption>
                     <thead>
@@ -29,70 +33,70 @@
                             <th>description</th>
                             <th>special tags</th>
                             <th>image</th>
-                            <th>visibility</th>
-                            <th>actions</th>
                         </tr>
                     </thead>
-                    @foreach (Photo photo in Model)
-                    {
-                        <tr>
+                    <tbody>
+                        <tr v-for="photo of photos">
                             <td class="align-middle">
-                                @photo.Title
+                                {{photo.title}}
                             </td>
                             <td class="align-middle h5">
-                                @photo?.Album?.Title
+                                {{photo?.album?.title}}
                             </td>
                             <td class="align-middle">
-                                @photo?.Description
+                                {{photo?.description}}
                             </td>
                             <td class="align-middle">
-                                <div class="d-flex flex-wrap">
-                                    @foreach (Category category in photo.Categories.Where(category => category.Prioritary))
-                                    {
-                                        <i class="fa-solid fa-@category.Symbol" style="color:@category.Color"></i>
-                                    }
+                                <div class="d-flex flex-wrap gap-1">
+                                    <template v-for="category of photo.categories">
+                                        <i v-if="category.prioritary" :class="['fa-solid fa-' + category.symbol]" :style="['color:' + category.color]"></i>
+                                    </template>
                                 </div>
                             </td>
                             <td class="align-middle w-25">
-                                <img src="@photo.Location" class="w-50" />
+                                <img :src="photo.location" class="w-100" />
                             </td>
-                            <td class="align-middle">
-                                @if (photo.Private)
-                                {
-                                    <i class="fa-solid fa-eye-slash"></i>
-                                }
-                                else
-                                {
-                                    <i class="fa-solid fa-eye"></i>
-                                }
-                            </td>
-                            <th class="align-middle">
-                                <div class="d-flex flex-column">
-                                    <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Photo", new {id = photo.PhotoId})">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-
-                                    @if (User.IsInRole("ADMIN"))
-                                    {
-                                        <a class="btn btn-outline-primary mb-1" href="@Url.Action("Edit", "Photo", new {id = photo.PhotoId})">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </a>
-
-                                        <form asp-controller="Photo" asp-action="Delete" asp-route-id="@photo.PhotoId" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                            <button type="submit" class="btn btn-outline-danger">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    }
-                                </div>
-                            </th>
+                            @*<th class="align-middle">
+                            <a class="btn btn-outline-secondary mb-1" href="@Url.Action("Details", "Photo", new {id = photo.PhotoId})">
+                            <i class="fa-solid fa-eye"></i>
+                            </a>
+                            </th>*@
                         </tr>
-                    }
+                    </tbody>
                 </table>
-            }
+            </div>
         </div>
     </main>
-
 </div>
+
+<script>
+    const { createApp } = Vue
+
+    createApp({
+        data() {
+            return {
+                photos: null,
+                searchedWord: "@Model",
+            }
+        },
+        methods: {
+            fetchPhotos() {
+                let searchedWord = this.searchedWord;
+                axios
+                    .get("https://localhost:7208/api/Api/index", {
+                        params: { searchedWord }
+                    })
+                    .then(response => {
+                        this.photos = response.data;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        this.photos = null;
+                    });
+            },
+        },
+        mounted() {
+            this.fetchPhotos();
+        }
+    }).mount('#app')
+</script>

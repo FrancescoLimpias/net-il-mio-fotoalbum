@@ -112,7 +112,7 @@ public class PhotoController : Controller
     // POST: PhotoController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(long id, Photo formGeneratedPhoto, [FromForm] List<string> SelectedCategories)
+    public ActionResult Edit(long id, [Bind(Prefix = "Item2.Photo")] Photo formGeneratedPhoto, [FromForm] List<string> SelectedCategories)
     {
         Photo? photoToEdit =
         context.Photos

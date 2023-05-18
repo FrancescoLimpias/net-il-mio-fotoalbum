@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace il_mio_fotoalbum.Models
 {
@@ -18,6 +19,7 @@ namespace il_mio_fotoalbum.Models
         [Required(ErrorMessage = "Set this category as prioritary or not")]
         public bool Prioritary { get; set; } = false;
 
+        [JsonIgnore]
         public List<Photo> Photos { get; set; }
 
         public Category()

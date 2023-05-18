@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace il_mio_fotoalbum.Models
 {
@@ -13,6 +14,7 @@ namespace il_mio_fotoalbum.Models
 
         public bool Private { get; set; } = true;
 
+        [JsonIgnore]
         public List<Photo> Photos { get; set; }
 
         public Album()
